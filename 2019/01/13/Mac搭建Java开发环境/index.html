@@ -44,23 +44,21 @@
 
 
 
-
-
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
 
-<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+<link rel="stylesheet" href="/css/main.css?v=7.1.1"/>
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
 
 
 
@@ -73,8 +71,10 @@
   var CONFIG = {
     root: '/',
     scheme: 'Gemini',
-    version: '6.7.0',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
     fancybox: false,
     fastclick: false,
     lazyload: false,
@@ -97,7 +97,7 @@
 
 
   <meta name="description" content="Mac下搭建Java开发环境说实话，工作这么多年，除了前两年在写C语言，在阿里每天都是写Java，对Java也越来越有感情了。 新Mac到手首先得搭建一下Java开发环境，毕竟Java是赖以吃饭的家伙呀。 JDK首先是安装JDK，先到Orcale官方网站下载对应的JDK版本，然后执行安装即可。但是不推荐用这种方式安装JDK，这是因为官方的安装器可能不可靠，推荐用下面的方式进行安装。12345# 增">
-<meta name="keywords" content="java,git,mac,maven">
+<meta name="keywords" content="java,mac,maven,git">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mac下搭建Java开发环境">
 <meta property="og:url" content="http://yoursite.com/2019/01/13/Mac搭建Java开发环境/index.html">
@@ -113,7 +113,8 @@
 
 
 
-
+  
+  
   <link rel="canonical" href="http://yoursite.com/2019/01/13/Mac搭建Java开发环境/"/>
 
 
@@ -297,7 +298,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jerryxgh"/>
-      <meta itemprop="description" content="jerryxgh的个人网站"/>
+      <meta itemprop="description" content="喜欢探寻事物的原理，专注C和Java。"/>
       <meta itemprop="image" content="/uploads/avatar.png"/>
     </span>
 
@@ -359,7 +360,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -379,6 +380,7 @@
           
 
           
+            
             
           
 
@@ -446,11 +448,11 @@
           
             <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/git/" rel="tag"># git</a>
-          
             <a href="/tags/mac/" rel="tag"># mac</a>
           
             <a href="/tags/maven/" rel="tag"># maven</a>
+          
+            <a href="/tags/git/" rel="tag"># git</a>
           
         </div>
       
@@ -510,7 +512,6 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
-    
     <div class="sidebar-inner">
 
       
@@ -535,7 +536,7 @@
                 alt="jerryxgh"/>
             
               <p class="site-author-name" itemprop="name">jerryxgh</p>
-              <p class="site-description motion-element" itemprop="description">jerryxgh的个人网站</p>
+              <div class="site-description motion-element" itemprop="description">喜欢探寻事物的原理，专注C和Java。</div>
           </div>
 
           
@@ -555,20 +556,12 @@
                 
                 
                 <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
+                  
                     
+                      <a href="/categories/">
                     
-                      
+                  
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
                     
                       
                     
@@ -584,28 +577,12 @@
                 
                 
                 <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
+                  
                     
+                      <a href="/tags/">
                     
-                      
+                  
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
                     
                       
                     
@@ -648,6 +625,8 @@
           
 
           
+
+          
           
 
           
@@ -681,6 +660,7 @@
 
     </div>
   </aside>
+  
 
 
         
@@ -709,7 +689,7 @@
 
 
 
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.7.0</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.1.1</div>
 
 
 
@@ -787,49 +767,45 @@
   
 
 
-  <script src="/js/src/utils.js?v=6.7.0"></script>
+  <script src="/js/utils.js?v=7.1.1"></script>
 
-  <script src="/js/src/motion.js?v=6.7.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/src/affix.js?v=6.7.0"></script>
-
-  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
+  <script src="/js/motion.js?v=7.1.1"></script>
 
 
 
   
-  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
-<script src="/js/src/post-details.js?v=6.7.0"></script>
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
 
 
 
   
-
-
-  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
 
 
 
   
 
 
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
 
   
 
 
-
-
-
-
-
-
-
+  
 
 
   
@@ -837,6 +813,7 @@
 
 
 
+  
 
   
 

@@ -44,23 +44,21 @@
 
 
 
-
-
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
 
-<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+<link rel="stylesheet" href="/css/main.css?v=7.1.1"/>
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
 
 
 
@@ -73,8 +71,10 @@
   var CONFIG = {
     root: '/',
     scheme: 'Gemini',
-    version: '6.7.0',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
     fancybox: false,
     fastclick: false,
     lazyload: false,
@@ -96,23 +96,24 @@
 
 
 
-  <meta name="description" content="jerryxgh的个人网站">
+  <meta name="description" content="喜欢探寻事物的原理，专注C和Java。">
 <meta name="keywords" content="programmer,java,c">
 <meta property="og:type" content="website">
 <meta property="og:title" content="jerryxgh">
 <meta property="og:url" content="http://yoursite.com/archives/2019/04/index.html">
 <meta property="og:site_name" content="jerryxgh">
-<meta property="og:description" content="jerryxgh的个人网站">
+<meta property="og:description" content="喜欢探寻事物的原理，专注C和Java。">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jerryxgh">
-<meta name="twitter:description" content="jerryxgh的个人网站">
+<meta name="twitter:description" content="喜欢探寻事物的原理，专注C和Java。">
 
 
 
 
 
-
+  
+  
   <link rel="canonical" href="http://yoursite.com/archives/2019/04/"/>
 
 
@@ -339,7 +340,7 @@
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
               datetime="2019-04-29T00:15:13+08:00"
-              content="2019-04-29" >
+              content="2019-04-29">
           04-29
         </time>
       </div>
@@ -376,7 +377,7 @@
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
               datetime="2019-04-27T22:00:41+08:00"
-              content="2019-04-27" >
+              content="2019-04-27">
           04-27
         </time>
       </div>
@@ -414,7 +415,6 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
-    
     <div class="sidebar-inner">
 
       
@@ -430,7 +430,7 @@
                 alt="jerryxgh"/>
             
               <p class="site-author-name" itemprop="name">jerryxgh</p>
-              <p class="site-description motion-element" itemprop="description">jerryxgh的个人网站</p>
+              <div class="site-description motion-element" itemprop="description">喜欢探寻事物的原理，专注C和Java。</div>
           </div>
 
           
@@ -450,20 +450,12 @@
                 
                 
                 <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
+                  
                     
+                      <a href="/categories/">
                     
-                      
+                  
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
                     
                       
                     
@@ -479,28 +471,12 @@
                 
                 
                 <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
+                  
                     
+                      <a href="/tags/">
                     
-                      
+                  
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
                     
                       
                     
@@ -543,6 +519,8 @@
           
 
           
+
+          
           
 
           
@@ -559,6 +537,7 @@
 
     </div>
   </aside>
+  
 
 
         
@@ -587,7 +566,7 @@
 
 
 
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.7.0</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.1.1</div>
 
 
 
@@ -665,44 +644,38 @@
   
 
 
-  <script src="/js/src/utils.js?v=6.7.0"></script>
+  <script src="/js/utils.js?v=7.1.1"></script>
 
-  <script src="/js/src/motion.js?v=6.7.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/src/affix.js?v=6.7.0"></script>
-
-  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
+  <script src="/js/motion.js?v=7.1.1"></script>
 
 
 
   
-
   
 
 
-  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
 
 
 
   
 
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
 
 
   
 
+  
 
+  
 
-
-
-
-
-
+  
 
 
 
@@ -711,6 +684,7 @@
 
 
 
+  
 
   
 

@@ -44,23 +44,21 @@
 
 
 
-
-
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
 
-<link rel="stylesheet" href="/css/main.css?v=6.7.0"/>
+<link rel="stylesheet" href="/css/main.css?v=7.1.1"/>
 
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
 
 
-  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
 
 
 
@@ -73,8 +71,10 @@
   var CONFIG = {
     root: '/',
     scheme: 'Gemini',
-    version: '6.7.0',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
     fancybox: false,
     fastclick: false,
     lazyload: false,
@@ -113,7 +113,8 @@
 
 
 
-
+  
+  
   <link rel="canonical" href="http://yoursite.com/2019/04/27/深入理解Java/深入理解ThreadLocal(上)/"/>
 
 
@@ -297,7 +298,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jerryxgh"/>
-      <meta itemprop="description" content="jerryxgh的个人网站"/>
+      <meta itemprop="description" content="喜欢探寻事物的原理，专注C和Java。"/>
       <meta itemprop="image" content="/uploads/avatar.png"/>
     </span>
 
@@ -359,7 +360,7 @@
           </span>
 
           
-            <span class="post-category" >
+            <span class="post-category">
             
               <span class="post-meta-divider">|</span>
             
@@ -379,6 +380,7 @@
           
 
           
+            
             
           
 
@@ -513,7 +515,6 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
-    
     <div class="sidebar-inner">
 
       
@@ -538,7 +539,7 @@
                 alt="jerryxgh"/>
             
               <p class="site-author-name" itemprop="name">jerryxgh</p>
-              <p class="site-description motion-element" itemprop="description">jerryxgh的个人网站</p>
+              <div class="site-description motion-element" itemprop="description">喜欢探寻事物的原理，专注C和Java。</div>
           </div>
 
           
@@ -558,20 +559,12 @@
                 
                 
                 <div class="site-state-item site-state-categories">
-                  <a href="/categories/index.html">
+                  
                     
+                      <a href="/categories/">
                     
-                      
+                  
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
                     
                       
                     
@@ -587,28 +580,12 @@
                 
                 
                 <div class="site-state-item site-state-tags">
-                  <a href="/tags/index.html">
+                  
                     
+                      <a href="/tags/">
                     
-                      
+                  
                     
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
                     
                       
                     
@@ -651,6 +628,8 @@
           
 
           
+
+          
           
 
           
@@ -684,6 +663,7 @@
 
     </div>
   </aside>
+  
 
 
         
@@ -712,7 +692,7 @@
 
 
 
-  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v6.7.0</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.1.1</div>
 
 
 
@@ -790,49 +770,45 @@
   
 
 
-  <script src="/js/src/utils.js?v=6.7.0"></script>
+  <script src="/js/utils.js?v=7.1.1"></script>
 
-  <script src="/js/src/motion.js?v=6.7.0"></script>
-
-
-
-  
-  
-
-
-  <script src="/js/src/affix.js?v=6.7.0"></script>
-
-  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
+  <script src="/js/motion.js?v=7.1.1"></script>
 
 
 
   
-  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
-<script src="/js/src/post-details.js?v=6.7.0"></script>
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
 
 
 
   
-
-
-  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
 
 
 
   
 
 
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
 
   
 
 
-
-
-
-
-
-
-
+  
 
 
   
@@ -840,6 +816,7 @@
 
 
 
+  
 
   
 
