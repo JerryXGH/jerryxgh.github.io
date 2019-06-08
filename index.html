@@ -345,6 +345,222 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/07/前端/IFrame跨域通信方法/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jerryxgh"/>
+      <meta itemprop="description" content="喜欢探寻事物的原理，专注C和Java，有态度地看代码。"/>
+      <meta itemprop="image" content="/uploads/avatar.png"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jerryxgh"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/06/07/前端/IFrame跨域通信方法/" class="post-title-link" itemprop="url">IFrame跨域通信方法</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-07 23:30:09" itemprop="dateCreated datePublished" datetime="2019-06-07T23:30:09+08:00">2019-06-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-08 16:58:00" itemprop="dateModified" datetime="2019-06-08T16:58:00+08:00">2019-06-08</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近遇到业务方希望能iframe嵌入我们的页面，直接复用我们的产品功能，我们欣然应允。但是发现不是简单iframe就能完成，嵌入我们页面的页面（暂且称之为父页面）需要与我们的页面有一些交互，比如页面在保存的时候，需要告诉父页面返回的数据id。父页面与我们的页面域名不同，由于浏览器同源策略的限制，导致普通的页面通信方法被浏览器阻断，但是最终我们基于<code>Window​.post​Message()</code>实现了跨域的iframe通信，成功服务了客户。本文分享一下解决iframe跨域问题的过程和方法。</p>
+<h1 id="同源策略"><a href="#同源策略" class="headerlink" title="同源策略"></a>同源策略</h1><p>同源策略是web安全的基石，同源策略通过限制不同源之间的交互，避免恶意代码访问未授权的信息。例如在服务端未授权跨域访问的情况下，ajax请求无法获得非同源服务端的返回数据。在iframe的场景，父页面无法直接访问嵌入的iframe页面的数据（非同源情况下），反过来被嵌入的iframe页面也无法访问父页面的数据。</p>
+<p>那么同<strong>源</strong>策略的<strong>源</strong>是怎么定义的，什么样的源是同源呢？根据MDN的定义，<strong>源</strong>其实是一个三元组：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(协议, 主机（http[s]协议场景就是域名）, 端口)</span><br></pre></td></tr></table></figure></p>
+<p>例如：<a href="https://jerryxgh.xyz/about/" target="_blank" rel="noopener">https://jerryxgh.xyz/about/</a> 对应的源三元组就是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(https, jerryxgh.xyz, 80)</span><br></pre></td></tr></table></figure></p>
+<p>只有在两个源的三元组全部相同的时候，才是同源的。那么在不同源的场景，iframe嵌入页面与外层页面怎么通信呢，使用<code>window.postMessage</code>。</p>
+<blockquote>
+<p>MDN: To communicate between documents from different origins, use <code>window.postMessage</code>.</p>
+</blockquote>
+<h1 id="iframe跨域通信-发消息"><a href="#iframe跨域通信-发消息" class="headerlink" title="iframe跨域通信-发消息"></a>iframe跨域通信-发消息</h1><p>iframe能够帮助整体复用产品，在实际业务中经常被使用，而且非同源（大部分是跨域）的场景占大多数，这是因为同源的场景往往不需要iframe，直接复用组件效果更好，因此解决iframe跨域场景下的通信问题尤为重要。根据MDN文档，跨域iframe最好使用<code>window.postMessage</code>。</p>
+<p>先来看看<code>window.postMessage</code>的函数定义：</p>
+<blockquote>
+<p>targetWindow.postMessage(message, targetOrigin, [transfer]);</p>
+</blockquote>
+<p>我们逐个来看函数各部分的含义。</p>
+<h2 id="targetWindow"><a href="#targetWindow" class="headerlink" title="targetWindow"></a><code>targetWindow</code></h2><p><code>targetWindow</code>是消息发送的目标窗口，那么如何获得目标窗口呢，有以下方法</p>
+<ul>
+<li><code>window.open</code> 打开一个新窗口并引用它</li>
+<li><code>window.opener</code> 如果当前窗口是另一个窗口（父窗口）用<code>window.open</code>函数打开的，那么当前窗口的<code>window.opener</code>指向父窗口，否则为<code>null</code></li>
+<li><code>HTMLIFrameElement.contentWindow</code> 父窗口引用被嵌入的iframe窗口，例如我们为iframe元素设置id，之后用<code>document.getElementById(&#39;iframeElementId&#39;).contentWindow</code>就可以获得iframe页面的窗口对象</li>
+<li><code>window.parent</code> 被嵌入的iframe子页面，引用嵌入自己的父页面窗口对象</li>
+<li><code>window.frames</code> 加上索引值（可以是从零开始的数字索引或者iframe的名称）引入当前页面嵌入的iframe页面。但其实<code>window.frames === window</code>，因此这其实是一个语法糖，可以直接使用<code>window[0]</code>代替<code>window.frames[0]</code></li>
+</ul>
+<h2 id="message参数"><a href="#message参数" class="headerlink" title="message参数"></a><code>message</code>参数</h2><p><code>message</code>参数是发送到目标窗口的数据，为了保证数据安全性，发送的数据是结构化算法(The structured clone algorithm<strong>克隆之后的结果，由于克隆算法不支持`Error</strong>、<code>Function</code>和DOM节点，因此不能直接发送此类对象。</p>
+<h2 id="targetOrigin参数"><a href="#targetOrigin参数" class="headerlink" title="targetOrigin参数"></a><code>targetOrigin</code>参数</h2><p><code>targetOrigin</code>指定允许接收参数的源，之前讲过源是一个三元组，因此<code>targetOrigin</code>只需要指定<strong>协议</strong>+<strong>域名</strong>+<strong>端口号</strong>，如果希望所有源都能接收到消息，<code>targetOrigin</code>可以写成”<em>“。一般不建议用”</em>“，尤其是传输的是类似密码等敏感数据的时候，尽量明确指定可以接收消息的源，避免敏感数据被恶意代码劫持。此外<code>targetOrigin</code>只能指定一个明确的源或者所有源，无法指定多个源。</p>
+<h2 id="transfer参数"><a href="#transfer参数" class="headerlink" title="transfer参数"></a><code>transfer</code>参数</h2><p><code>transfer</code>参数是可选的，是<code>Transferable</code>类型对象数组，与消息一起传递到目标窗口，不同的是这些对象的所有权也将转移到接收方。<code>transfer</code>参数使用场景比较少，而且兼容性不太好。</p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p><code>window.postMessage</code>的基本功能在现代浏览器上已经全部支持，对于<code>transfer</code>参数的支持度一般，尤其是移动端浏览器。因此可以放心使用<code>window.postMessage</code>的基本功能。</p>
+<h1 id="iframe跨域通信-收消息"><a href="#iframe跨域通信-收消息" class="headerlink" title="iframe跨域通信-收消息"></a>iframe跨域通信-收消息</h1><p><code>window.postMessage</code>用于发送消息，接收方使用<code>window.addEventListener</code>接收消息：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">"message"</span>, receiveMessage, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">receiveMessage</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(event);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中回调函数收到的event对象，包含的主要属性如下：</p>
+<ul>
+<li><code>data</code><br>发送方发出的数据</li>
+<li><code>origin</code><br>发送方窗口的源</li>
+<li><code>source</code><br>发送方的窗口引用，接收方可以通过该窗口引用向发送发发送数据，行程通信通道。</li>
+</ul>
+<h1 id="实战样例"><a href="#实战样例" class="headerlink" title="实战样例"></a>实战样例</h1><p>首先是父页面，也就是嵌入iframe的页面，域名是iframe.com，域名解析可以使用本地host绑定的方式实现，父页面代码如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype html&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"zh-CN"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>Test CRO IFrame Inner Page<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"description"</span> <span class="attr">content</span>=<span class="string">"Test CRO IFrame"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"author"</span> <span class="attr">content</span>=<span class="string">"jerryxgh"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">         <span class="built_in">window</span>.addEventListener(<span class="string">"message"</span>, receiveMessage, <span class="literal">false</span>);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">         <span class="function"><span class="keyword">function</span> <span class="title">receiveMessage</span>(<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">             <span class="built_in">console</span>.log(event);</span></span><br><span class="line"><span class="undefined">         &#125;</span></span><br><span class="line"><span class="undefined">        </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        你好，我是嵌入的iframe页面</span><br><span class="line">        <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">"window.parent.postMessage('message from iframe inner', 'http://iframe.com:8080')"</span>&gt;</span>按我给父页面发消息<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>被iframe嵌入的页面，域名是iframeinner.com，页面代码如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype html&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"zh-CN"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Test CRO IFrame<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"description"</span> <span class="attr">content</span>=<span class="string">"Test CRO IFrame"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"author"</span> <span class="attr">content</span>=<span class="string">"jerryxgh"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">     <span class="built_in">window</span>.addEventListener(<span class="string">"message"</span>, receiveMessage, <span class="literal">false</span>);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">     <span class="function"><span class="keyword">function</span> <span class="title">receiveMessage</span>(<span class="params">event</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">         <span class="built_in">console</span>.log(event);</span></span><br><span class="line"><span class="javascript">         event.source.postMessage(<span class="string">"got your message"</span>, <span class="string">'http://iframeinner.com:8080'</span>)</span></span><br><span class="line"><span class="undefined">     &#125;</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"inline-frame-id"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">title</span>=<span class="string">"Inline Frame Example"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">width</span>=<span class="string">"300"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">height</span>=<span class="string">"200"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">name</span>=<span class="string">"inner-frame"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">src</span>=<span class="string">"http://iframeinner.com:8080/_iframe_inner.html"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>点击iframe嵌入页面的按钮，效果如下图：<br><img src="/2019/06/07/前端/IFrame跨域通信方法/iframe_test_snapshot.jpg" alt="IFrame实验截图" title="IFrame实验截图"><br>子页面的按钮点击之后，向父页面发送了一条消息，内容是”message from iframe inner”，父页面收到消息之后，向子页面回复了一条消息”got your message”，从图中看出消息的确发送和接收成功了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过<code>window.postMessage</code>和<code>window.addEventListener</code>，可以实现安全的跨域iframe页面通信，但是需要注意https协议页面，无法iframe嵌入http协议的的页面，此外<code>window.postMessage</code>发送的数据不能是<code>Error</code>、<code>Function</code>或者html DOM元素，这是因为发送的数据统一经过结构化克隆算法克隆，而该算法不支持以上三种类型。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy" target="_blank" rel="noopener">同源策略</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe" target="_blank" rel="noopener">iframe</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage" target="_blank" rel="noopener">Window​.post​Message()</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener" target="_blank" rel="noopener">Event​Target​.add​Event​Listener()</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm" target="_blank" rel="noopener">结构化克隆算法</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/19/Mac搭建C&C++开发环境/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1152,7 +1368,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-16 23:11:58" itemprop="dateModified" datetime="2019-05-16T23:11:58+08:00">2019-05-16</time>
+                <time title="修改时间：2019-05-25 13:42:39" itemprop="dateModified" datetime="2019-05-25T13:42:39+08:00">2019-05-25</time>
               
             
           </span>
@@ -1342,7 +1558,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-23 23:58:17" itemprop="dateModified" datetime="2019-05-23T23:58:17+08:00">2019-05-23</time>
+                <time title="修改时间：2019-06-08 00:16:58" itemprop="dateModified" datetime="2019-06-08T00:16:58+08:00">2019-06-08</time>
               
             
           </span>
@@ -1414,6 +1630,8 @@
 </ul>
 <h2 id="git"><a href="#git" class="headerlink" title="git"></a>git</h2><p>git就不多说了，必备。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install git</span><br></pre></td></tr></table></figure></p>
 <h2 id="emacs"><a href="#emacs" class="headerlink" title="emacs"></a>emacs</h2><p>emacs的用户真的很少，但是用了就离不开啦。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew cask install emacs</span><br></pre></td></tr></table></figure></p>
+<h2 id="http-server"><a href="#http-server" class="headerlink" title="http-server"></a>http-server</h2><p>有时候做一些实验，需要快速搭建http静态服务器，用<code>http-server</code>一条命令就能搞定：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> &lt;target directory&gt; &amp;&amp; http-server</span><br></pre></td></tr></table></figure></p>
+<p>so easy ;D，用下面的命令安装<code>http-server</code>即可：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install http-server -g</span><br></pre></td></tr></table></figure></p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li>mac安装Java：<a href="https://stackoverflow.com/questions/24342886/how-to-install-java-8-on-mac" target="_blank" rel="noopener">https://stackoverflow.com/questions/24342886/how-to-install-java-8-on-mac</a></li>
 <li>brew加速：<a href="https://lug.ustc.edu.cn/wiki/mirrors/help/brew.git" target="_blank" rel="noopener">https://lug.ustc.edu.cn/wiki/mirrors/help/brew.git</a></li>
@@ -1506,7 +1724,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1527,7 +1745,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1578,7 +1798,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">17</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

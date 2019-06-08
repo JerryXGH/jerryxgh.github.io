@@ -97,7 +97,7 @@
 
 
   <meta name="description" content="不可去名上理会。须求其所以然。  ——朱熹  ThreadLocal帮助存储线程私有变量，往往作为线程级别的全局变量使用（线程之内全局可见，线程之间互不可见），能够在多个方法之间传递状态，帮助方法减少参数。那么ThreadLocal是如何实现线程私有存储，所谓的ThreadLocal内存泄漏问题又是怎么回事儿呢？本文尝试从源码角度探索ThreadLocal的原理，之后从原理的角度，用一个例子复现">
-<meta name="keywords" content="java,multithread,threadlocal,thread safe,线程,线程安全,original,原创">
+<meta name="keywords" content="java,original,原创,multithread,threadlocal,thread safe,线程,线程安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解ThreadLocal(下)">
 <meta property="og:url" content="http://yoursite.com/2019/04/29/深入理解Java/深入理解ThreadLocal(下)/index.html">
@@ -557,6 +557,10 @@
           
             <a href="/tags/java/" rel="tag"># java</a>
           
+            <a href="/tags/original/" rel="tag"># original</a>
+          
+            <a href="/tags/原创/" rel="tag"># 原创</a>
+          
             <a href="/tags/multithread/" rel="tag"># multithread</a>
           
             <a href="/tags/threadlocal/" rel="tag"># threadlocal</a>
@@ -566,10 +570,6 @@
             <a href="/tags/线程/" rel="tag"># 线程</a>
           
             <a href="/tags/线程安全/" rel="tag"># 线程安全</a>
-          
-            <a href="/tags/original/" rel="tag"># original</a>
-          
-            <a href="/tags/原创/" rel="tag"># 原创</a>
           
         </div>
       
@@ -667,7 +667,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -688,7 +688,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">2</span>
+                      
+                    
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -739,7 +741,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">17</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
