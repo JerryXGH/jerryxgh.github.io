@@ -96,18 +96,24 @@
 
 
 
-  <meta name="description" content="工作前几年做了C语言开发，后来到了阿里全面转向了Java。回想起来其实做C开发的日子是最快乐的。平时偶尔看看C和C++的代码，记录一下搭建C&amp;amp;C++开发和阅读代码环境的过程。 emacs我是深度emacs用户，emacs是首先要安装的软件。1brew cask install emacs global阅读代码必备，帮助定位变量、函数定义和使用，在代码之间自由穿梭。1brew install">
-<meta name="keywords" content="c,c++">
+  <meta name="description" content="最近需要做一些实验，需要mysql环境，想到用docker来搭建应该很快，于是尝试了下，整个过程的确比较快，不仅完成了mysql环境搭建，还顺带解决了界面化sql的问题，整个过程解决了不少问题，想记录下来备忘，于是有了这篇笔记。 安装dockerMac下安装docker，直接到docker官网下载docker-desktop安装包安装即可。不过docker-desktop的安装包比较大，建议用下载">
+<meta name="keywords" content="mysql,docker,sqlpad">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mac下搭建C&amp;C++开发环境">
-<meta property="og:url" content="http://yoursite.com/2019/05/19/Mac搭建C&C++开发环境/index.html">
+<meta property="og:title" content="基于docker搭建MySQL开发环境">
+<meta property="og:url" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/index.html">
 <meta property="og:site_name" content="jerryxgh">
-<meta property="og:description" content="工作前几年做了C语言开发，后来到了阿里全面转向了Java。回想起来其实做C开发的日子是最快乐的。平时偶尔看看C和C++的代码，记录一下搭建C&amp;amp;C++开发和阅读代码环境的过程。 emacs我是深度emacs用户，emacs是首先要安装的软件。1brew cask install emacs global阅读代码必备，帮助定位变量、函数定义和使用，在代码之间自由穿梭。1brew install">
+<meta property="og:description" content="最近需要做一些实验，需要mysql环境，想到用docker来搭建应该很快，于是尝试了下，整个过程的确比较快，不仅完成了mysql环境搭建，还顺带解决了界面化sql的问题，整个过程解决了不少问题，想记录下来备忘，于是有了这篇笔记。 安装dockerMac下安装docker，直接到docker官网下载docker-desktop安装包安装即可。不过docker-desktop的安装包比较大，建议用下载">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-19T16:05:20.978Z">
+<meta property="og:image" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/aliyun_mirror.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/docker_config.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/sqlpad_create_connection.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/connection.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/example.jpg">
+<meta property="og:updated_time" content="2019-06-12T16:41:08.184Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mac下搭建C&amp;C++开发环境">
-<meta name="twitter:description" content="工作前几年做了C语言开发，后来到了阿里全面转向了Java。回想起来其实做C开发的日子是最快乐的。平时偶尔看看C和C++的代码，记录一下搭建C&amp;amp;C++开发和阅读代码环境的过程。 emacs我是深度emacs用户，emacs是首先要安装的软件。1brew cask install emacs global阅读代码必备，帮助定位变量、函数定义和使用，在代码之间自由穿梭。1brew install">
+<meta name="twitter:title" content="基于docker搭建MySQL开发环境">
+<meta name="twitter:description" content="最近需要做一些实验，需要mysql环境，想到用docker来搭建应该很快，于是尝试了下，整个过程的确比较快，不仅完成了mysql环境搭建，还顺带解决了界面化sql的问题，整个过程解决了不少问题，想记录下来备忘，于是有了这篇笔记。 安装dockerMac下安装docker，直接到docker官网下载docker-desktop安装包安装即可。不过docker-desktop的安装包比较大，建议用下载">
+<meta name="twitter:image" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/aliyun_mirror.jpg">
 
 
 
@@ -115,7 +121,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/05/19/Mac搭建C&C++开发环境/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/"/>
 
 
 
@@ -125,7 +131,7 @@
   };
 </script>
 
-  <title>Mac下搭建C&C++开发环境 | jerryxgh</title>
+  <title>基于docker搭建MySQL开发环境 | jerryxgh</title>
   
 
 
@@ -345,7 +351,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/19/Mac搭建C&C++开发环境/"/>
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jerryxgh"/>
@@ -362,7 +368,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Mac下搭建C&C++开发环境
+          <h2 class="post-title" itemprop="name headline">基于docker搭建MySQL开发环境
 
               
             
@@ -388,7 +394,7 @@
                 
               
 
-              <time title="创建时间：2019-05-19 23:48:46" itemprop="dateCreated datePublished" datetime="2019-05-19T23:48:46+08:00">2019-05-19</time>
+              <time title="创建时间：2019-06-12 23:40:53" itemprop="dateCreated datePublished" datetime="2019-06-12T23:40:53+08:00">2019-06-12</time>
             
 
             
@@ -405,7 +411,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-20 00:05:20" itemprop="dateModified" datetime="2019-05-20T00:05:20+08:00">2019-05-20</time>
+                <time title="修改时间：2019-06-13 00:41:08" itemprop="dateModified" datetime="2019-06-13T00:41:08+08:00">2019-06-13</time>
               
             
           </span>
@@ -457,9 +463,26 @@
       
 
       
-        <p>工作前几年做了C语言开发，后来到了阿里全面转向了Java。回想起来其实做C开发的日子是最快乐的。平时偶尔看看C和C++的代码，记录一下搭建C&amp;C++开发和阅读代码环境的过程。</p>
-<h1 id="emacs"><a href="#emacs" class="headerlink" title="emacs"></a>emacs</h1><p>我是深度emacs用户，emacs是首先要安装的软件。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew cask install emacs</span><br></pre></td></tr></table></figure></p>
-<h1 id="global"><a href="#global" class="headerlink" title="global"></a>global</h1><p>阅读代码必备，帮助定位变量、函数定义和使用，在代码之间自由穿梭。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install global</span><br></pre></td></tr></table></figure></p>
+        <p>最近需要做一些实验，需要mysql环境，想到用docker来搭建应该很快，于是尝试了下，整个过程的确比较快，不仅完成了mysql环境搭建，还顺带解决了界面化sql的问题，整个过程解决了不少问题，想记录下来备忘，于是有了这篇笔记。</p>
+<h1 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h1><p>Mac下安装docker，直接到docker官网下载docker-desktop安装包安装即可。不过docker-desktop的安装包比较大，建议用下载软件下载。笔者下载的时候大约安装包超过了500M。</p>
+<h2 id="docker镜像加速"><a href="#docker镜像加速" class="headerlink" title="docker镜像加速"></a>docker镜像加速</h2><p>因为网络原因，从docker官方仓库下载镜像速度比较慢，可以通过阿里云进行镜像加速。方法是注册一个阿里云账号并登陆，访问<a href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors" target="_blank" rel="noopener">镜像加速器</a>获得阿里云分配的Docker加速器地址。如下图：<br><img src="/2019/06/12/基于docker搭建MySQL开发环境/aliyun_mirror.jpg" alt="阿里云docker镜像加速器" title="阿里云docker镜像加速器"><br>之后打开docker-desktop的preference，将上面获得的镜像加速链接，配置到docker中并生效：<br><img src="/2019/06/12/基于docker搭建MySQL开发环境/docker_config.jpg" alt="" title="docker配置镜像加速地址"></p>
+<h2 id="启动mysql"><a href="#启动mysql" class="headerlink" title="启动mysql"></a>启动mysql</h2><p>docker安装好之后，就可以进行docker实例启动了，我选择了mysql的<a href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener">官方镜像</a>，用下面的命令下载和启动msyql镜像：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3306:3306 --name <span class="built_in">test</span>-mysql -e MYSQL_ROOT_PASSWORD=password -d mysql:latest</span><br></pre></td></tr></table></figure></p>
+<p>上面的命令中<code>-p 3306:3306</code>将docker中的3306端口映射到宿主机的3306端口，这样我就能在外部访问mysql docker实例的服务了。<br>之后连接到mysql docker实例上，登陆数据库做一些必要的配置：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 在docker实例上执行交互式bash</span></span><br><span class="line">docker <span class="built_in">exec</span> -it <span class="built_in">test</span>-mysql bash</span><br><span class="line"><span class="comment">## 以root身份连接mysql</span></span><br><span class="line">mysql -uroot -ppassowrd</span><br></pre></td></tr></table></figure></p>
+<p>配置root账号可以远程登陆mysql（主要是方便测试，实际工程当然是不推荐的）：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 允许root账户远程登陆</span></span><br><span class="line"><span class="keyword">grant</span> all <span class="keyword">PRIVILEGES</span> <span class="keyword">on</span> *.* <span class="keyword">to</span> root@<span class="string">'%'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span><br></pre></td></tr></table></figure></p>
+<p>修改root账号的密码加密模式，这是因为mysql8默认采用<code>caching_sha2_password</code>而不是<code>mysql_native_password</code>，这会导致下面要介绍的sqlpad或者其他mysql客户端，无法通过mysql的鉴权，报类似下面的错误：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MYSQL：ER_NOT_SUPPORTED_AUTH_MODE:Client does not support authentication protocol</span><br></pre></td></tr></table></figure></p>
+<p>因此需要修改root账号的密码加密方案：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">'root'</span>@<span class="string">'%'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">'test'</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="安装配置sqlpad"><a href="#安装配置sqlpad" class="headerlink" title="安装配置sqlpad"></a>安装配置sqlpad</h2><p>习惯了用浏览器直接操作db，实在不像安装客户端，偶然发现了sqlpad，经过简单的配置就能用起来，简直惊为天人。首先安装sqlpad：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install sqlpad -g</span><br></pre></td></tr></table></figure></p>
+<p>切换到存储sqlpad配置数据的目录，执行下面的命令启动sqlpad：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlpad --dir ./ --port 3000 --passphrase secret-encryption-phrase</span><br></pre></td></tr></table></figure></p>
+<p>之后在浏览器访问<a href="http://127.0.0.1:3000" target="_blank" rel="noopener">http://127.0.0.1:3000</a> 就能开始使用sqlpad。先注册账号，在用账号登陆，这里注册的账号都是存储在本地文件中的。登陆之后的界面如下：<br><img src="/2019/06/12/基于docker搭建MySQL开发环境/sqlpad_create_connection.jpg" alt="" title="sqlpad界面"></p>
+<p>点击上图的connections创建连接：<br><img src="/2019/06/12/基于docker搭建MySQL开发环境/connection.jpg" alt="" title="添加mysql连接"><br>可以用下方的test进行连接可用性测试，添加好连接之后，就可以使用啦，如下图：<br><img src="/2019/06/12/基于docker搭建MySQL开发环境/example.jpg" alt="" title="sqlpad执行样例"></p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="http://rickbergfalk.github.io/sqlpad/installation-and-administration/" target="_blank" rel="noopener">sqlpad安装文档</a></li>
+<li><a href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener">docker mysql 镜像</a></li>
+<li><a href="https://www.docker.com/products/docker-desktop" target="_blank" rel="noopener">docker-desktop</a></li>
+<li><a href="https://yq.aliyun.com/articles/29941" target="_blank" rel="noopener">使用阿里云进行docker镜像加速</a></li>
+<li><a href="https://github.com/rickbergfalk/sqlpad" target="_blank" rel="noopener">sqlpad: 可视化sql交互</a></li>
+<li><a href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener">mysql官方docker镜像</a></li>
+</ol>
 
       
     </div>
@@ -483,9 +506,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/c/" rel="tag"># c</a>
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
-            <a href="/tags/c/" rel="tag"># c++</a>
+            <a href="/tags/docker/" rel="tag"># docker</a>
+          
+            <a href="/tags/sqlpad/" rel="tag"># sqlpad</a>
           
         </div>
       
@@ -498,8 +523,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/29/深入理解Java/深入理解ThreadLocal(下)/" rel="next" title="深入理解ThreadLocal(下)">
-                <i class="fa fa-chevron-left"></i> 深入理解ThreadLocal(下)
+              <a href="/2019/06/07/前端/IFrame跨域通信方法/" rel="next" title="IFrame跨域通信方法">
+                <i class="fa fa-chevron-left"></i> IFrame跨域通信方法
               </a>
             
           </div>
@@ -507,10 +532,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/06/07/前端/IFrame跨域通信方法/" rel="prev" title="IFrame跨域通信方法">
-                IFrame跨域通信方法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -707,7 +728,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#emacs"><span class="nav-number">1.</span> <span class="nav-text">emacs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#global"><span class="nav-number">2.</span> <span class="nav-text">global</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装docker"><span class="nav-number">1.</span> <span class="nav-text">安装docker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker镜像加速"><span class="nav-number">1.1.</span> <span class="nav-text">docker镜像加速</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动mysql"><span class="nav-number">1.2.</span> <span class="nav-text">启动mysql</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装配置sqlpad"><span class="nav-number">1.3.</span> <span class="nav-text">安装配置sqlpad</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>

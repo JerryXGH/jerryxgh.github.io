@@ -97,14 +97,14 @@
 
 
   <meta name="description" content="Java的ThreadLocal是Java语言提供的线程私有变量解决方案，一般的业务开发可能很少用到，但是在框架（例如Spring）或者中间件（例如分布式调用跟踪）等系统中非常常见。深入理解ThreadLocal对理解框架或者中间件的代码很有帮助，是Java进阶的必经之路。笔者一直认为理解原理的最好方法就是看代码。笔者在公司笔者面试了不少候选人，大部分同学对ThreadLocal的理解往往不准确，">
-<meta name="keywords" content="java,original,原创,multithread,threadlocal,thread safe,线程,线程安全">
+<meta name="keywords" content="java,原创,multithread,ThreadLocal,thread safe,线程,线程安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解ThreadLocal(上)">
 <meta property="og:url" content="http://yoursite.com/2019/04/27/深入理解Java/深入理解ThreadLocal(上)/index.html">
 <meta property="og:site_name" content="jerryxgh">
 <meta property="og:description" content="Java的ThreadLocal是Java语言提供的线程私有变量解决方案，一般的业务开发可能很少用到，但是在框架（例如Spring）或者中间件（例如分布式调用跟踪）等系统中非常常见。深入理解ThreadLocal对理解框架或者中间件的代码很有帮助，是Java进阶的必经之路。笔者一直认为理解原理的最好方法就是看代码。笔者在公司笔者面试了不少候选人，大部分同学对ThreadLocal的理解往往不准确，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-16T15:04:23.609Z">
+<meta property="og:updated_time" content="2019-06-08T13:40:04.765Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解ThreadLocal(上)">
 <meta name="twitter:description" content="Java的ThreadLocal是Java语言提供的线程私有变量解决方案，一般的业务开发可能很少用到，但是在框架（例如Spring）或者中间件（例如分布式调用跟踪）等系统中非常常见。深入理解ThreadLocal对理解框架或者中间件的代码很有帮助，是Java进阶的必经之路。笔者一直认为理解原理的最好方法就是看代码。笔者在公司笔者面试了不少候选人，大部分同学对ThreadLocal的理解往往不准确，">
@@ -405,7 +405,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-16 23:04:23" itemprop="dateModified" datetime="2019-05-16T23:04:23+08:00">2019-05-16</time>
+                <time title="修改时间：2019-06-08 21:40:04" itemprop="dateModified" datetime="2019-06-08T21:40:04+08:00">2019-06-08</time>
               
             
           </span>
@@ -494,13 +494,11 @@
           
             <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/original/" rel="tag"># original</a>
-          
             <a href="/tags/原创/" rel="tag"># 原创</a>
           
             <a href="/tags/multithread/" rel="tag"># multithread</a>
           
-            <a href="/tags/threadlocal/" rel="tag"># threadlocal</a>
+            <a href="/tags/ThreadLocal/" rel="tag"># ThreadLocal</a>
           
             <a href="/tags/thread-safe/" rel="tag"># thread safe</a>
           
@@ -684,7 +682,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

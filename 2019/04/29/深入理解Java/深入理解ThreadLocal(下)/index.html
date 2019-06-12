@@ -97,7 +97,7 @@
 
 
   <meta name="description" content="不可去名上理会。须求其所以然。  ——朱熹  ThreadLocal帮助存储线程私有变量，往往作为线程级别的全局变量使用（线程之内全局可见，线程之间互不可见），能够在多个方法之间传递状态，帮助方法减少参数。那么ThreadLocal是如何实现线程私有存储，所谓的ThreadLocal内存泄漏问题又是怎么回事儿呢？本文尝试从源码角度探索ThreadLocal的原理，之后从原理的角度，用一个例子复现">
-<meta name="keywords" content="java,original,原创,multithread,threadlocal,thread safe,线程,线程安全">
+<meta name="keywords" content="java,原创,multithread,ThreadLocal,thread safe,线程,线程安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解ThreadLocal(下)">
 <meta property="og:url" content="http://yoursite.com/2019/04/29/深入理解Java/深入理解ThreadLocal(下)/index.html">
@@ -107,7 +107,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/04/29/深入理解Java/深入理解ThreadLocal(下)/ThreadLocalMap.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/04/29/深入理解Java/深入理解ThreadLocal(下)/java-threadlocal-memory-leak.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/04/29/深入理解Java/深入理解ThreadLocal(下)/thread-gcroot-strong-reference.jpg">
-<meta property="og:updated_time" content="2019-05-25T06:38:40.212Z">
+<meta property="og:updated_time" content="2019-06-08T13:40:15.390Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解ThreadLocal(下)">
 <meta name="twitter:description" content="不可去名上理会。须求其所以然。  ——朱熹  ThreadLocal帮助存储线程私有变量，往往作为线程级别的全局变量使用（线程之内全局可见，线程之间互不可见），能够在多个方法之间传递状态，帮助方法减少参数。那么ThreadLocal是如何实现线程私有存储，所谓的ThreadLocal内存泄漏问题又是怎么回事儿呢？本文尝试从源码角度探索ThreadLocal的原理，之后从原理的角度，用一个例子复现">
@@ -409,7 +409,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-25 14:38:40" itemprop="dateModified" datetime="2019-05-25T14:38:40+08:00">2019-05-25</time>
+                <time title="修改时间：2019-06-08 21:40:15" itemprop="dateModified" datetime="2019-06-08T21:40:15+08:00">2019-06-08</time>
               
             
           </span>
@@ -557,13 +557,11 @@
           
             <a href="/tags/java/" rel="tag"># java</a>
           
-            <a href="/tags/original/" rel="tag"># original</a>
-          
             <a href="/tags/原创/" rel="tag"># 原创</a>
           
             <a href="/tags/multithread/" rel="tag"># multithread</a>
           
-            <a href="/tags/threadlocal/" rel="tag"># threadlocal</a>
+            <a href="/tags/ThreadLocal/" rel="tag"># ThreadLocal</a>
           
             <a href="/tags/thread-safe/" rel="tag"># thread safe</a>
           
@@ -592,8 +590,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/16/深入理解Java/深入理解ConcurrentHashMap(上)/" rel="prev" title="深入理解ConcurrentHashMap(上)">
-                深入理解ConcurrentHashMap(上) <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/19/Mac搭建C&C++开发环境/" rel="prev" title="Mac下搭建C&C++开发环境">
+                Mac下搭建C&C++开发环境 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -747,7 +745,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">20</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
