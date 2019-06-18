@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在使用Mybatis的时候，有两种写CRUD的方式，一种是使用xml文件或者Java的注解手写sql，一种是用Mybatis的代码生成器(MBG)自动生成，这两种笔者都经历过。手写的方式有个很大缺点就是效率太低，CRUD的代码其实绝大部分是重复的，不同的往往只是表名而已，因此手写往往就是copy&amp;amp;paste，这个过程相当枯燥而且容易出错；代码生成器在效率上好多了，MBG能够帮助生成功能全面">
+<meta name="keywords" content="java,原创,mybatis-plus,通用Mapper,tk mapper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mybatis-plus与通用Mapper对比">
+<meta property="og:url" content="http://yoursite.com/2019/06/12/mybatis/mybatis-plus与通用Mapper对比/index.html">
+<meta property="og:site_name" content="jerryxgh">
+<meta property="og:description" content="在使用Mybatis的时候，有两种写CRUD的方式，一种是使用xml文件或者Java的注解手写sql，一种是用Mybatis的代码生成器(MBG)自动生成，这两种笔者都经历过。手写的方式有个很大缺点就是效率太低，CRUD的代码其实绝大部分是重复的，不同的往往只是表名而已，因此手写往往就是copy&amp;amp;paste，这个过程相当枯燥而且容易出错；代码生成器在效率上好多了，MBG能够帮助生成功能全面">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-18T16:52:02.031Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mybatis-plus与通用Mapper对比">
+<meta name="twitter:description" content="在使用Mybatis的时候，有两种写CRUD的方式，一种是使用xml文件或者Java的注解手写sql，一种是用Mybatis的代码生成器(MBG)自动生成，这两种笔者都经历过。手写的方式有个很大缺点就是效率太低，CRUD的代码其实绝大部分是重复的，不同的往往只是表名而已，因此手写往往就是copy&amp;amp;paste，这个过程相当枯燥而且容易出错；代码生成器在效率上好多了，MBG能够帮助生成功能全面">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2019/06/12/mybatis/mybatis-plus与通用Mapper对比/"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>mybatis-plus与通用Mapper对比 | jerryxgh</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jerryxgh</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">自强不息，厚德载物</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br/>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br/>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/12/mybatis/mybatis-plus与通用Mapper对比/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jerryxgh"/>
+      <meta itemprop="description" content="喜欢探寻事物的原理，专注C和Java，有态度地看代码。"/>
+      <meta itemprop="image" content="/uploads/avatar.png"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jerryxgh"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">mybatis-plus与通用Mapper对比
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-12 00:06:46" itemprop="dateCreated datePublished" datetime="2019-06-12T00:06:46+08:00">2019-06-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-19 00:52:02" itemprop="dateModified" datetime="2019-06-19T00:52:02+08:00">2019-06-19</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在使用Mybatis的时候，有两种写CRUD的方式，一种是使用xml文件或者Java的注解手写sql，一种是用Mybatis的代码生成器(MBG)自动生成，这两种笔者都经历过。手写的方式有个很大缺点就是效率太低，CRUD的代码其实绝大部分是重复的，不同的往往只是表名而已，因此手写往往就是copy&amp;paste，这个过程相当枯燥而且容易出错；代码生成器在效率上好多了，MBG能够帮助生成功能全面的Mapper或者DAO，但是问题也很明显，就是每次新增字段的时候重新生成代码，但是老代码可能被定制化修改过了，比如增加了一些非CRUD的接口，这时就需要做代码合并，对后期的维护很不友好。</p>
+<p>回头看，无论是手写sql还是MBG代码生成，实际产出的代码，在模式上有大量的重复，这种重复是导致问题的根源，笔者在遇到通用Mapper和Mybatis-plus之前，也一直在苦苦寻觅解决方案，直到在一次偶然的交流中听到有通用Mapper这种库，CRUD的问题犹如拨云雾而见青天，原来还有这么优雅的解决方案！笔者在此感谢通用Mapper和Mybatis-plus的作者提供这么优秀的类库。笔者在实际项目中使用过这两个类库，结合笔者的观察，对这两个优秀的mybatis增强库进行比较，希望对大家的选型有帮助。</p>
+<h1 id="jdk兼容性"><a href="#jdk兼容性" class="headerlink" title="jdk兼容性"></a>jdk兼容性</h1><p>通用Mapper支持Java1.6+，使用weekend库可以支持Java1.8+的语法，而mybatis-plus只支持Java1.8+。</p>
+<h1 id="创建-ID主键生成策略"><a href="#创建-ID主键生成策略" class="headerlink" title="创建-ID主键生成策略"></a>创建-ID主键生成策略</h1><p>通用mapper主键策略，核心是KeySql注解。</p>
+<ol>
+<li><p>如果数据库支持字段自增并且JDBC驱动支持<code>getGeneratedKeys</code>，推荐使用（例如MySQL）。配置样例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="meta">@KeySql</span>(useGeneratedKeys = <span class="keyword">true</span>)</span><br><span class="line"><span class="keyword">private</span> Long id;</span><br><span class="line"><span class="comment">// 或者都使用JPA注解：</span></span><br><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="meta">@GeneratedValue</span>(generator = <span class="string">"JDBC"</span>)</span><br><span class="line"><span class="keyword">private</span> Long id;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果数据库不支持<code>getGeneratedKeys</code>，但是支持自增，可以用下面的方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="comment">//DEFAULT 需要配合 IDENTITY 参数（ORDER默认AFTER）</span></span><br><span class="line"><span class="meta">@KeySql</span>(dialect = IdentityDialect.DEFAULT)</span><br><span class="line"><span class="keyword">private</span> Integer id;</span><br><span class="line"><span class="comment">//建议直接指定数据库</span></span><br><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="meta">@KeySql</span>(dialect = IdentityDialect.MYSQL)</span><br><span class="line"><span class="keyword">private</span> Integer id;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 目前通用Mapper支持了以下的数据库：</span></span><br><span class="line">DB2(<span class="string">"VALUES IDENTITY_VAL_LOCAL()"</span>),</span><br><span class="line">MYSQL(<span class="string">"SELECT LAST_INSERT_ID()"</span>),</span><br><span class="line">SQLSERVER(<span class="string">"SELECT SCOPE_IDENTITY()"</span>),</span><br><span class="line">CLOUDSCAPE(<span class="string">"VALUES IDENTITY_VAL_LOCAL()"</span>),</span><br><span class="line">DERBY(<span class="string">"VALUES IDENTITY_VAL_LOCAL()"</span>),</span><br><span class="line">HSQLDB(<span class="string">"CALL IDENTITY()"</span>),</span><br><span class="line">SYBASE(<span class="string">"SELECT @@IDENTITY"</span>),</span><br><span class="line">DB2_MF(<span class="string">"SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1"</span>),</span><br><span class="line">INFORMIX(<span class="string">"select dbinfo('sqlca.sqlerrd1') from systables where tabid=1"</span>),</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示指定获取id的sql，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="meta">@KeySql</span>(sql = <span class="string">"select SEQ_ID.nextval from dual"</span>, order = ORDER.BEFORE)</span><br><span class="line"><span class="keyword">private</span> Integer id;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>而mybatis-plus用下面的方式支持5种主键策略，分别如下：</p>
+<ol>
+<li>IdType.AUTO<br>数据库ID自增，当使用这种策略时，如果用户手工设置了<code>主键</code>的值，mybatis-plus不会使用，而是用数据库自增的方式生成，也就是在写入记录的时候用户无法手工指定<code>主键</code>值。</li>
+<li>IdType.NONE<br>IdType.NONE是<code>主键</code>的默认类型，如果不显示指定<code>主键</code>的类型，那么就是NONE类型，NONE类型的特点是用户没有指定主键的值，使用下面的IdType.ID_WORKER策略生成主键，否则使用用户指定的主键值。</li>
+<li>IdType.INPUT<br>IdType.INPUT使用用户设定的主键值，包括null。在mysql的场景，如果主键的值是null，使用自增。</li>
+<li><p>ID_WORKER和ID_WORKER_STR<br>基于雪花（snowflake）生成sequence，可以生成64bit的Long类型主键，其中ID_WORKER_STR生成字符类型的主键，忽略用户的输入，始终用算法生成主键，大致算法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 时间戳部分 | 数据中心部分 | 机器标识部分 | 序列号部分</span></span><br><span class="line"><span class="keyword">return</span> ((timestamp - twepoch) &lt;&lt; timestampLeftShift)</span><br><span class="line">    | (datacenterId &lt;&lt; datacenterIdShift)</span><br><span class="line">    | (workerId &lt;&lt; workerIdShift)</span><br><span class="line">    | sequence;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>uuid<br>使用uuid生成主键，忽略用户的输入，始终用算法生成主键，主键类型必须是字符串。</p>
+</li>
+</ol>
+<p>mybatis-plus虽然主键策略有5种，但最实用的是AUTO和INPUT，INPUT应该是最常用的类型，尽量不要使用NONE。相比mybatis-plus，通用Mapper没有进一步封装外部生成主键的机制，而是集中在数据库自己生成主键上，如果使用外部方式生成主键，显示设置主键，通用Mapper自动跳过主键生成，直接使用用户设置的主键。整体上我认为通用Mapper的方式更合理，使用更简单。</p>
+<h1 id="更新-null更新策略"><a href="#更新-null更新策略" class="headerlink" title="更新-null更新策略"></a>更新-null更新策略</h1><p>mybatis-plus默认只更新非null字段，之前有类似updateAllColumn的方法，但是在v2.1.6版本之后被移除了，现在可以通过手工拼接sql的方式做到更新字段为null。而通用Mapper的默认update方法就会把null的字段设置成null，除非用updateXxxSelective方法，只更新有值的字段。</p>
+<h1 id="项目活跃度"><a href="#项目活跃度" class="headerlink" title="项目活跃度"></a>项目活跃度</h1><p>通用Mapper的绝大部分代码是作者一个人贡献的，因此项目的整体性更好，从github代码提交来看一直在活跃维护中；mybatis-plus是由多人合作写成，近期也在快速变化中，从项目注释角度看略显混乱，但是非常活跃。</p>
+<h1 id="注解选择"><a href="#注解选择" class="headerlink" title="注解选择"></a>注解选择</h1><p>通用Mapper尽量复用JPA的注解规范，在必须的地方提供自己定义的注解，mybatis-plus基本上都是自定义的注解，相对来讲对于熟悉JPA的同学，更容易学习通用Mapper。</p>
+<h1 id="代码量"><a href="#代码量" class="headerlink" title="代码量"></a>代码量</h1><p>包括单元测试代码情况下，通用Mapper的java文件数量是329，去除测试代码后的文件数量是272，去除测试代码后的代码行数是23401，也就是只有两万行代码，建议彻底看完，还是很精简的。</p>
+<p>而mybatis-plus在包括包括单元测试代码情况下，java文件数量是411，去除测试代码后的文件数量是361，去除测试代码后的代码行数是33797，代码相比通用Mapper多了接近一半。</p>
+<p>从代码量的角度，如果功能相同或者相近的情况下，当然是越少越好，通用Mapper的代码相比mybatis-plus的代码少了接近一半，Java文件的数量也少了接近一半。 这是我的统计方法，不一定精确，但是有参考价值：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 包括测试文件的java文件数量</span></span><br><span class="line">find . -name <span class="string">'*.java'</span> | wc -l</span><br><span class="line"><span class="comment"># 不包括测试文件的java文件数量</span></span><br><span class="line">find . -name <span class="string">'*.java'</span> | grep -v <span class="string">"Test"</span> | wc -l</span><br><span class="line"><span class="comment"># 不包括测试文件的java代码行数</span></span><br><span class="line">find . -name <span class="string">'*.java'</span> | grep -v <span class="string">"Test"</span> | xargs wc -l</span><br></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通用Mapper主要由一人写成，项目相对比较稳定，能够兼容JDK1.6+，此外也能用库支持1.8+的语法，而mybatis-plus由多人合作写成，项目活跃度较高，但是只支持java1.8+；此外通用Mapper的代码量较少，在主键策略、注解选择、接口设计上感觉更合理，不清楚为什么在外部的反响反而并不如mybatis-plus，这也算是一桩怪事吧。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="http://www.mybatis.org/generator/" target="_blank" rel="noopener">Mybatis代码生成器</a></li>
+<li><a href="https://github.com/abel533/Mapper" target="_blank" rel="noopener">通用Mapper</a></li>
+<li><a href="https://github.com/baomidou/mybatis-plus" target="_blank" rel="noopener">mybatis-plus</a></li>
+<li><a href="https://gitee.com/yu120/sequence" target="_blank" rel="noopener">分布式高效ID生产黑科技</a></li>
+</ol>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/原创/" rel="tag"># 原创</a>
+          
+            <a href="/tags/mybatis-plus/" rel="tag"># mybatis-plus</a>
+          
+            <a href="/tags/通用Mapper/" rel="tag"># 通用Mapper</a>
+          
+            <a href="/tags/tk-mapper/" rel="tag"># tk mapper</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/07/前端/IFrame跨域通信方法/" rel="next" title="IFrame跨域通信方法">
+                <i class="fa fa-chevron-left"></i> IFrame跨域通信方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/12/基于docker搭建MySQL开发环境/" rel="prev" title="基于docker搭建MySQL开发环境">
+                基于docker搭建MySQL开发环境 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="jerryxgh"/>
+            
+              <p class="site-author-name" itemprop="name">jerryxgh</p>
+              <div class="site-description motion-element" itemprop="description">喜欢探寻事物的原理，专注C和Java，有态度地看代码。</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">26</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#jdk兼容性"><span class="nav-number">1.</span> <span class="nav-text">jdk兼容性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建-ID主键生成策略"><span class="nav-number">2.</span> <span class="nav-text">创建-ID主键生成策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更新-null更新策略"><span class="nav-number">3.</span> <span class="nav-text">更新-null更新策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目活跃度"><span class="nav-number">4.</span> <span class="nav-text">项目活跃度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注解选择"><span class="nav-number">5.</span> <span class="nav-text">注解选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码量"><span class="nav-number">6.</span> <span class="nav-text">代码量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">8.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jerryxgh</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.1.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

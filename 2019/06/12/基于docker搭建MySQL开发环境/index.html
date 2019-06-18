@@ -109,7 +109,7 @@
 <meta property="og:image" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/sqlpad_create_connection.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/connection.jpg">
 <meta property="og:image" content="http://yoursite.com/2019/06/12/基于docker搭建MySQL开发环境/example.jpg">
-<meta property="og:updated_time" content="2019-06-12T16:46:26.576Z">
+<meta property="og:updated_time" content="2019-06-17T16:58:55.259Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于docker搭建MySQL开发环境">
 <meta name="twitter:description" content="最近需要做一些实验，需要mysql环境，想到用docker来搭建应该很快，于是尝试了下，整个过程的确比较快，不仅完成了mysql环境搭建，还顺带解决了界面化sql的问题，整个过程解决了不少问题，想记录下来备忘，于是有了这篇笔记。 安装dockerMac下安装docker，直接到docker官网下载docker-desktop安装包安装即可。不过docker-desktop的安装包比较大，建议用下载">
@@ -411,7 +411,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-13 00:46:26" itemprop="dateModified" datetime="2019-06-13T00:46:26+08:00">2019-06-13</time>
+                <time title="修改时间：2019-06-18 00:58:55" itemprop="dateModified" datetime="2019-06-18T00:58:55+08:00">2019-06-18</time>
               
             
           </span>
@@ -472,6 +472,7 @@
 <p>配置root账号可以远程登陆mysql（主要是方便测试，实际工程当然是不推荐的）：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 允许root账户远程登陆</span></span><br><span class="line"><span class="keyword">grant</span> all <span class="keyword">PRIVILEGES</span> <span class="keyword">on</span> *.* <span class="keyword">to</span> root@<span class="string">'%'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span><br></pre></td></tr></table></figure></p>
 <p>修改root账号的密码加密模式，这是因为mysql8默认采用<code>caching_sha2_password</code>而不是<code>mysql_native_password</code>，这会导致下面要介绍的sqlpad或者其他mysql客户端，无法通过mysql的鉴权，报类似下面的错误：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MYSQL：ER_NOT_SUPPORTED_AUTH_MODE:Client does not support authentication protocol</span><br></pre></td></tr></table></figure></p>
 <p>因此需要修改root账号的密码加密方案：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">'root'</span>@<span class="string">'%'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">'test'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>mysql的官方镜像默认时区，会发现比中国时间晚了8小时，需要设置正确的时区：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@ 查看当前时区</span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'%time_zone%'</span>;</span><br><span class="line">#全局设置时区为东8区，即北京时间</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> <span class="keyword">time_zone</span> = <span class="string">'+8:00'</span>;</span><br><span class="line">#仅修改当前会话时区</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">time_zone</span> = <span class="string">'+8:00'</span>;</span><br><span class="line">#立即生效修改</span><br><span class="line"><span class="keyword">FLUSH</span> <span class="keyword">PRIVILEGES</span>;</span><br></pre></td></tr></table></figure></p>
 <h1 id="安装配置sqlpad"><a href="#安装配置sqlpad" class="headerlink" title="安装配置sqlpad"></a>安装配置sqlpad</h1><p>习惯了用浏览器直接操作db，实在不像安装客户端，偶然发现了sqlpad，经过简单的配置就能用起来，简直惊为天人。首先安装sqlpad：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install sqlpad -g</span><br></pre></td></tr></table></figure></p>
 <p>切换到存储sqlpad配置数据的目录，执行下面的命令启动sqlpad：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlpad --dir ./ --port 3000 --passphrase secret-encryption-phrase</span><br></pre></td></tr></table></figure></p>
 <p>之后在浏览器访问<a href="http://127.0.0.1:3000" target="_blank" rel="noopener">http://127.0.0.1:3000</a> 就能开始使用sqlpad。先注册账号，在用账号登陆，这里注册的账号都是存储在本地文件中的。登陆之后的界面如下：<br><img src="/2019/06/12/基于docker搭建MySQL开发环境/sqlpad_create_connection.jpg" alt="" title="sqlpad界面"></p>
@@ -525,8 +526,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/06/07/前端/IFrame跨域通信方法/" rel="next" title="IFrame跨域通信方法">
-                <i class="fa fa-chevron-left"></i> IFrame跨域通信方法
+              <a href="/2019/06/12/mybatis/mybatis-plus与通用Mapper对比/" rel="next" title="mybatis-plus与通用Mapper对比">
+                <i class="fa fa-chevron-left"></i> mybatis-plus与通用Mapper对比
               </a>
             
           </div>
@@ -606,7 +607,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -629,7 +630,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -692,7 +695,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">23</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

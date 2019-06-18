@@ -407,7 +407,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-13 00:46:26" itemprop="dateModified" datetime="2019-06-13T00:46:26+08:00">2019-06-13</time>
+                <time title="修改时间：2019-06-18 00:58:55" itemprop="dateModified" datetime="2019-06-18T00:58:55+08:00">2019-06-18</time>
               
             
           </span>
@@ -470,6 +470,7 @@
 <p>配置root账号可以远程登陆mysql（主要是方便测试，实际工程当然是不推荐的）：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 允许root账户远程登陆</span></span><br><span class="line"><span class="keyword">grant</span> all <span class="keyword">PRIVILEGES</span> <span class="keyword">on</span> *.* <span class="keyword">to</span> root@<span class="string">'%'</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span><br></pre></td></tr></table></figure></p>
 <p>修改root账号的密码加密模式，这是因为mysql8默认采用<code>caching_sha2_password</code>而不是<code>mysql_native_password</code>，这会导致下面要介绍的sqlpad或者其他mysql客户端，无法通过mysql的鉴权，报类似下面的错误：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MYSQL：ER_NOT_SUPPORTED_AUTH_MODE:Client does not support authentication protocol</span><br></pre></td></tr></table></figure></p>
 <p>因此需要修改root账号的密码加密方案：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">'root'</span>@<span class="string">'%'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">'test'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>mysql的官方镜像默认时区，会发现比中国时间晚了8小时，需要设置正确的时区：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@ 查看当前时区</span><br><span class="line"><span class="keyword">SHOW</span> <span class="keyword">VARIABLES</span> <span class="keyword">LIKE</span> <span class="string">'%time_zone%'</span>;</span><br><span class="line">#全局设置时区为东8区，即北京时间</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> <span class="keyword">time_zone</span> = <span class="string">'+8:00'</span>;</span><br><span class="line">#仅修改当前会话时区</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">time_zone</span> = <span class="string">'+8:00'</span>;</span><br><span class="line">#立即生效修改</span><br><span class="line"><span class="keyword">FLUSH</span> <span class="keyword">PRIVILEGES</span>;</span><br></pre></td></tr></table></figure></p>
 <h1 id="安装配置sqlpad"><a href="#安装配置sqlpad" class="headerlink" title="安装配置sqlpad"></a>安装配置sqlpad</h1><p>习惯了用浏览器直接操作db，实在不像安装客户端，偶然发现了sqlpad，经过简单的配置就能用起来，简直惊为天人。首先安装sqlpad：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install sqlpad -g</span><br></pre></td></tr></table></figure></p>
 <p>切换到存储sqlpad配置数据的目录，执行下面的命令启动sqlpad：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlpad --dir ./ --port 3000 --passphrase secret-encryption-phrase</span><br></pre></td></tr></table></figure></p>
 <p>之后在浏览器访问<a href="http://127.0.0.1:3000" target="_blank" rel="noopener">http://127.0.0.1:3000</a> 就能开始使用sqlpad。先注册账号，在用账号登陆，这里注册的账号都是存储在本地文件中的。登陆之后的界面如下：<br><img src="/2019/06/12/基于docker搭建MySQL开发环境/sqlpad_create_connection.jpg" alt="" title="sqlpad界面"></p>
@@ -482,6 +483,218 @@
 <li><a href="https://yq.aliyun.com/articles/29941" target="_blank" rel="noopener">使用阿里云进行docker镜像加速</a></li>
 <li><a href="https://github.com/rickbergfalk/sqlpad" target="_blank" rel="noopener">sqlpad: 可视化sql交互</a></li>
 <li><a href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener">mysql官方docker镜像</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/12/mybatis/mybatis-plus与通用Mapper对比/"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jerryxgh"/>
+      <meta itemprop="description" content="喜欢探寻事物的原理，专注C和Java，有态度地看代码。"/>
+      <meta itemprop="image" content="/uploads/avatar.png"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jerryxgh"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/06/12/mybatis/mybatis-plus与通用Mapper对比/" class="post-title-link" itemprop="url">mybatis-plus与通用Mapper对比</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-12 00:06:46" itemprop="dateCreated datePublished" datetime="2019-06-12T00:06:46+08:00">2019-06-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-19 00:52:02" itemprop="dateModified" datetime="2019-06-19T00:52:02+08:00">2019-06-19</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在使用Mybatis的时候，有两种写CRUD的方式，一种是使用xml文件或者Java的注解手写sql，一种是用Mybatis的代码生成器(MBG)自动生成，这两种笔者都经历过。手写的方式有个很大缺点就是效率太低，CRUD的代码其实绝大部分是重复的，不同的往往只是表名而已，因此手写往往就是copy&amp;paste，这个过程相当枯燥而且容易出错；代码生成器在效率上好多了，MBG能够帮助生成功能全面的Mapper或者DAO，但是问题也很明显，就是每次新增字段的时候重新生成代码，但是老代码可能被定制化修改过了，比如增加了一些非CRUD的接口，这时就需要做代码合并，对后期的维护很不友好。</p>
+<p>回头看，无论是手写sql还是MBG代码生成，实际产出的代码，在模式上有大量的重复，这种重复是导致问题的根源，笔者在遇到通用Mapper和Mybatis-plus之前，也一直在苦苦寻觅解决方案，直到在一次偶然的交流中听到有通用Mapper这种库，CRUD的问题犹如拨云雾而见青天，原来还有这么优雅的解决方案！笔者在此感谢通用Mapper和Mybatis-plus的作者提供这么优秀的类库。笔者在实际项目中使用过这两个类库，结合笔者的观察，对这两个优秀的mybatis增强库进行比较，希望对大家的选型有帮助。</p>
+<h1 id="jdk兼容性"><a href="#jdk兼容性" class="headerlink" title="jdk兼容性"></a>jdk兼容性</h1><p>通用Mapper支持Java1.6+，使用weekend库可以支持Java1.8+的语法，而mybatis-plus只支持Java1.8+。</p>
+<h1 id="创建-ID主键生成策略"><a href="#创建-ID主键生成策略" class="headerlink" title="创建-ID主键生成策略"></a>创建-ID主键生成策略</h1><p>通用mapper主键策略，核心是KeySql注解。</p>
+<ol>
+<li><p>如果数据库支持字段自增并且JDBC驱动支持<code>getGeneratedKeys</code>，推荐使用（例如MySQL）。配置样例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="meta">@KeySql</span>(useGeneratedKeys = <span class="keyword">true</span>)</span><br><span class="line"><span class="keyword">private</span> Long id;</span><br><span class="line"><span class="comment">// 或者都使用JPA注解：</span></span><br><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="meta">@GeneratedValue</span>(generator = <span class="string">"JDBC"</span>)</span><br><span class="line"><span class="keyword">private</span> Long id;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果数据库不支持<code>getGeneratedKeys</code>，但是支持自增，可以用下面的方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="comment">//DEFAULT 需要配合 IDENTITY 参数（ORDER默认AFTER）</span></span><br><span class="line"><span class="meta">@KeySql</span>(dialect = IdentityDialect.DEFAULT)</span><br><span class="line"><span class="keyword">private</span> Integer id;</span><br><span class="line"><span class="comment">//建议直接指定数据库</span></span><br><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="meta">@KeySql</span>(dialect = IdentityDialect.MYSQL)</span><br><span class="line"><span class="keyword">private</span> Integer id;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 目前通用Mapper支持了以下的数据库：</span></span><br><span class="line">DB2(<span class="string">"VALUES IDENTITY_VAL_LOCAL()"</span>),</span><br><span class="line">MYSQL(<span class="string">"SELECT LAST_INSERT_ID()"</span>),</span><br><span class="line">SQLSERVER(<span class="string">"SELECT SCOPE_IDENTITY()"</span>),</span><br><span class="line">CLOUDSCAPE(<span class="string">"VALUES IDENTITY_VAL_LOCAL()"</span>),</span><br><span class="line">DERBY(<span class="string">"VALUES IDENTITY_VAL_LOCAL()"</span>),</span><br><span class="line">HSQLDB(<span class="string">"CALL IDENTITY()"</span>),</span><br><span class="line">SYBASE(<span class="string">"SELECT @@IDENTITY"</span>),</span><br><span class="line">DB2_MF(<span class="string">"SELECT IDENTITY_VAL_LOCAL() FROM SYSIBM.SYSDUMMY1"</span>),</span><br><span class="line">INFORMIX(<span class="string">"select dbinfo('sqlca.sqlerrd1') from systables where tabid=1"</span>),</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示指定获取id的sql，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="meta">@KeySql</span>(sql = <span class="string">"select SEQ_ID.nextval from dual"</span>, order = ORDER.BEFORE)</span><br><span class="line"><span class="keyword">private</span> Integer id;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>而mybatis-plus用下面的方式支持5种主键策略，分别如下：</p>
+<ol>
+<li>IdType.AUTO<br>数据库ID自增，当使用这种策略时，如果用户手工设置了<code>主键</code>的值，mybatis-plus不会使用，而是用数据库自增的方式生成，也就是在写入记录的时候用户无法手工指定<code>主键</code>值。</li>
+<li>IdType.NONE<br>IdType.NONE是<code>主键</code>的默认类型，如果不显示指定<code>主键</code>的类型，那么就是NONE类型，NONE类型的特点是用户没有指定主键的值，使用下面的IdType.ID_WORKER策略生成主键，否则使用用户指定的主键值。</li>
+<li>IdType.INPUT<br>IdType.INPUT使用用户设定的主键值，包括null。在mysql的场景，如果主键的值是null，使用自增。</li>
+<li><p>ID_WORKER和ID_WORKER_STR<br>基于雪花（snowflake）生成sequence，可以生成64bit的Long类型主键，其中ID_WORKER_STR生成字符类型的主键，忽略用户的输入，始终用算法生成主键，大致算法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 时间戳部分 | 数据中心部分 | 机器标识部分 | 序列号部分</span></span><br><span class="line"><span class="keyword">return</span> ((timestamp - twepoch) &lt;&lt; timestampLeftShift)</span><br><span class="line">    | (datacenterId &lt;&lt; datacenterIdShift)</span><br><span class="line">    | (workerId &lt;&lt; workerIdShift)</span><br><span class="line">    | sequence;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>uuid<br>使用uuid生成主键，忽略用户的输入，始终用算法生成主键，主键类型必须是字符串。</p>
+</li>
+</ol>
+<p>mybatis-plus虽然主键策略有5种，但最实用的是AUTO和INPUT，INPUT应该是最常用的类型，尽量不要使用NONE。相比mybatis-plus，通用Mapper没有进一步封装外部生成主键的机制，而是集中在数据库自己生成主键上，如果使用外部方式生成主键，显示设置主键，通用Mapper自动跳过主键生成，直接使用用户设置的主键。整体上我认为通用Mapper的方式更合理，使用更简单。</p>
+<h1 id="更新-null更新策略"><a href="#更新-null更新策略" class="headerlink" title="更新-null更新策略"></a>更新-null更新策略</h1><p>mybatis-plus默认只更新非null字段，之前有类似updateAllColumn的方法，但是在v2.1.6版本之后被移除了，现在可以通过手工拼接sql的方式做到更新字段为null。而通用Mapper的默认update方法就会把null的字段设置成null，除非用updateXxxSelective方法，只更新有值的字段。</p>
+<h1 id="项目活跃度"><a href="#项目活跃度" class="headerlink" title="项目活跃度"></a>项目活跃度</h1><p>通用Mapper的绝大部分代码是作者一个人贡献的，因此项目的整体性更好，从github代码提交来看一直在活跃维护中；mybatis-plus是由多人合作写成，近期也在快速变化中，从项目注释角度看略显混乱，但是非常活跃。</p>
+<h1 id="注解选择"><a href="#注解选择" class="headerlink" title="注解选择"></a>注解选择</h1><p>通用Mapper尽量复用JPA的注解规范，在必须的地方提供自己定义的注解，mybatis-plus基本上都是自定义的注解，相对来讲对于熟悉JPA的同学，更容易学习通用Mapper。</p>
+<h1 id="代码量"><a href="#代码量" class="headerlink" title="代码量"></a>代码量</h1><p>包括单元测试代码情况下，通用Mapper的java文件数量是329，去除测试代码后的文件数量是272，去除测试代码后的代码行数是23401，也就是只有两万行代码，建议彻底看完，还是很精简的。</p>
+<p>而mybatis-plus在包括包括单元测试代码情况下，java文件数量是411，去除测试代码后的文件数量是361，去除测试代码后的代码行数是33797，代码相比通用Mapper多了接近一半。</p>
+<p>从代码量的角度，如果功能相同或者相近的情况下，当然是越少越好，通用Mapper的代码相比mybatis-plus的代码少了接近一半，Java文件的数量也少了接近一半。 这是我的统计方法，不一定精确，但是有参考价值：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 包括测试文件的java文件数量</span></span><br><span class="line">find . -name <span class="string">'*.java'</span> | wc -l</span><br><span class="line"><span class="comment"># 不包括测试文件的java文件数量</span></span><br><span class="line">find . -name <span class="string">'*.java'</span> | grep -v <span class="string">"Test"</span> | wc -l</span><br><span class="line"><span class="comment"># 不包括测试文件的java代码行数</span></span><br><span class="line">find . -name <span class="string">'*.java'</span> | grep -v <span class="string">"Test"</span> | xargs wc -l</span><br></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通用Mapper主要由一人写成，项目相对比较稳定，能够兼容JDK1.6+，此外也能用库支持1.8+的语法，而mybatis-plus由多人合作写成，项目活跃度较高，但是只支持java1.8+；此外通用Mapper的代码量较少，在主键策略、注解选择、接口设计上感觉更合理，不清楚为什么在外部的反响反而并不如mybatis-plus，这也算是一桩怪事吧。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><a href="http://www.mybatis.org/generator/" target="_blank" rel="noopener">Mybatis代码生成器</a></li>
+<li><a href="https://github.com/abel533/Mapper" target="_blank" rel="noopener">通用Mapper</a></li>
+<li><a href="https://github.com/baomidou/mybatis-plus" target="_blank" rel="noopener">mybatis-plus</a></li>
+<li><a href="https://gitee.com/yu120/sequence" target="_blank" rel="noopener">分布式高效ID生产黑科技</a></li>
 </ol>
 
           
@@ -1609,7 +1822,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-08 00:16:58" itemprop="dateModified" datetime="2019-06-08T00:16:58+08:00">2019-06-08</time>
+                <time title="修改时间：2019-06-14 00:47:52" itemprop="dateModified" datetime="2019-06-14T00:47:52+08:00">2019-06-14</time>
               
             
           </span>
@@ -1683,10 +1896,17 @@
 <h2 id="emacs"><a href="#emacs" class="headerlink" title="emacs"></a>emacs</h2><p>emacs的用户真的很少，但是用了就离不开啦。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew cask install emacs</span><br></pre></td></tr></table></figure></p>
 <h2 id="http-server"><a href="#http-server" class="headerlink" title="http-server"></a>http-server</h2><p>有时候做一些实验，需要快速搭建http静态服务器，用<code>http-server</code>一条命令就能搞定：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> &lt;target directory&gt; &amp;&amp; http-server</span><br></pre></td></tr></table></figure></p>
 <p>so easy ;D，用下面的命令安装<code>http-server</code>即可：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install http-server -g</span><br></pre></td></tr></table></figure></p>
+<h3 id="fasd"><a href="#fasd" class="headerlink" title="fasd"></a>fasd</h3><p>快速目录跳转，其中初始化的参数<code>posix-alias</code>提供了以下的alias命令：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> a=<span class="string">'fasd -a'</span>        <span class="comment"># any</span></span><br><span class="line"><span class="built_in">alias</span> s=<span class="string">'fasd -si'</span>       <span class="comment"># show / search / select</span></span><br><span class="line"><span class="built_in">alias</span> d=<span class="string">'fasd -d'</span>        <span class="comment"># directory</span></span><br><span class="line"><span class="built_in">alias</span> f=<span class="string">'fasd -f'</span>        <span class="comment"># file</span></span><br><span class="line"><span class="built_in">alias</span> sd=<span class="string">'fasd -sid'</span>     <span class="comment"># interactive directory selection</span></span><br><span class="line"><span class="built_in">alias</span> sf=<span class="string">'fasd -sif'</span>     <span class="comment"># interactive file selection</span></span><br><span class="line"><span class="built_in">alias</span> z=<span class="string">'fasd_cd -d'</span>     <span class="comment"># cd, same functionality as j in autojump</span></span><br><span class="line"><span class="built_in">alias</span> zz=<span class="string">'fasd_cd -d -i'</span> <span class="comment"># cd with interactive selection</span></span><br></pre></td></tr></table></figure></p>
+<p>使用样例：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">f foo           <span class="comment"># list frecent files matching foo</span></span><br><span class="line">a foo bar       <span class="comment"># list frecent files and directories matching foo and bar</span></span><br><span class="line">f js$           <span class="comment"># list frecent files that ends in js</span></span><br><span class="line">f -e vim foo    <span class="comment"># run vim on the most frecent file matching foo</span></span><br><span class="line">mplayer `f bar` <span class="comment"># run mplayer on the most frecent file matching bar</span></span><br><span class="line">z foo           <span class="comment"># cd into the most frecent directory matching foo</span></span><br><span class="line">open `sf pdf`   <span class="comment"># interactively select a file matching pdf and launch `open`</span></span><br></pre></td></tr></table></figure></p>
+<p>Mac下安装fasd的方法：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install fasd</span><br></pre></td></tr></table></figure></p>
+<p>如果你使用的bash，在<code>~/.bashrc</code>添加下面的一行以初始化fasd：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span> <span class="string">"<span class="variable">$(fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install)</span>"</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的代码可能会增加bash的初始化时间，可以用下面的代码加速启动：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fasd_cache=<span class="string">"<span class="variable">$HOME</span>/.fasd-init-bash"</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">"<span class="variable">$(command -v fasd)</span>"</span> -nt <span class="string">"<span class="variable">$fasd_cache</span>"</span> -o ! -s <span class="string">"<span class="variable">$fasd_cache</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">  fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install &gt;| <span class="string">"<span class="variable">$fasd_cache</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">source</span> <span class="string">"<span class="variable">$fasd_cache</span>"</span></span><br><span class="line"><span class="built_in">unset</span> fasd_cache</span><br></pre></td></tr></table></figure></p>
+<p>如果你使用的是zsh + oh-my-zsh，修改oh-mh-zsh的fasd插件代码：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># oh-my-zsh/plugins/fasd/fasd.plugin.zsh</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$commands</span>[fasd] ]; <span class="keyword">then</span> <span class="comment"># check if fasd is installed</span></span><br><span class="line">  fasd_cache=<span class="string">"<span class="variable">$&#123;ZSH_CACHE_DIR&#125;</span>/fasd-init-cache"</span></span><br><span class="line">  <span class="keyword">if</span> [ <span class="string">"<span class="variable">$(command -v fasd)</span>"</span> -nt <span class="string">"<span class="variable">$fasd_cache</span>"</span> -o ! -s <span class="string">"<span class="variable">$fasd_cache</span>"</span> ]; <span class="keyword">then</span></span><br><span class="line">    fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install &gt;| <span class="string">"<span class="variable">$fasd_cache</span>"</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="built_in">source</span> <span class="string">"<span class="variable">$fasd_cache</span>"</span></span><br><span class="line">  <span class="built_in">unset</span> fasd_cache</span><br><span class="line"></span><br><span class="line">  <span class="built_in">alias</span> v=<span class="string">"f -e \"<span class="variable">$EDITOR</span>\""</span></span><br><span class="line">  <span class="built_in">alias</span> o=<span class="string">'a -e open_command'</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure></p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
 <li>mac安装Java：<a href="https://stackoverflow.com/questions/24342886/how-to-install-java-8-on-mac" target="_blank" rel="noopener">https://stackoverflow.com/questions/24342886/how-to-install-java-8-on-mac</a></li>
 <li>brew加速：<a href="https://lug.ustc.edu.cn/wiki/mirrors/help/brew.git" target="_blank" rel="noopener">https://lug.ustc.edu.cn/wiki/mirrors/help/brew.git</a></li>
 <li>mac删除jdk: <a href="https://stackoverflow.com/questions/19039752/removing-java-8-jdk-from-mac" target="_blank" rel="noopener">https://stackoverflow.com/questions/19039752/removing-java-8-jdk-from-mac</a></li>
+<li><a href="https://github.com/clvv/fasd" target="_blank" rel="noopener">fasd github地址</a></li>
 </ol>
 
           
@@ -1775,7 +1995,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1798,7 +2018,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1861,7 +2083,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">23</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
